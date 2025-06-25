@@ -1,0 +1,44 @@
+
+
+"use client"
+
+import { useEffect } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { HeroSection } from "@/components/hero-section"
+import { RestaurantSeating } from "@/components/featured-foods"
+// import { Categories } from "@/components/categories"
+import { AboutSection } from "@/components/about-section"
+import { useLanguage } from "@/hooks/use-language"
+import { LanguageSwitcher } from "@/components/language-switcher"
+
+export default function HomePage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const { t } = useLanguage()  // QO'SHILDI
+
+  useEffect(() => {
+    // Check if there's a redirect parameter
+    const redirect = searchParams.get("redirect")
+
+    if (redirect === "saboy") {
+      // Redirect to saboy page or show saboy content
+      router.push("/saboy")
+    } else if (redirect === "dastafka") {
+      // Redirect to dastafka page or show dastafka content
+      router.push("/dastafka")
+    }
+  }, [searchParams, router])
+
+  return (
+    <div className="min-h-screen">
+      {/* <div className="fixed top-4  text-center  z-50">
+        <LanguageSwitcher />
+      </div> */}
+      <HeroSection />
+
+      {/* <Categories /> */}
+      <RestaurantSeating />
+      <AboutSection />
+    </div>
+  )
+}
