@@ -1,33 +1,37 @@
+
+"use client"
+
 import { Card, CardContent } from "@/components/ui/card"
 import { Clock, Shield, Truck, Users } from "lucide-react"
-import { useLanguage } from "@/hooks/use-language"
+import { useLanguage } from "@/hooks/use-language" // Assuming your useLanguage hook is in this path
 
-
-const features = [
-  {
-    icon: Clock,
-    title: "Tez Yetkazib Berish",
-    description: "30-40 daqiqa ichida sizning uyingizgacha yetkazib beramiz",
-  },
-  {
-    icon: Shield,
-    title: "Sifat Kafolati",
-    description: "Faqat yangi va sifatli mahsulotlardan foydalanmiz",
-  },
-  {
-    icon: Truck,
-    title: "Yetkazib Berish",
-    description: "Sizni uyingizga yetkazib berish xizmati.",
-  },
-  {
-    icon: Users,
-    title: "10:00-00:00 Qo'llab-quvvatlash",
-    description: "Har qanday savolingiz bo'lsa, biz doimo yordam berishga tayyormiz",
-  },
-]
 
 export function AboutSection() {
   const {t} = useLanguage()
+const features = [
+  {
+    icon: Clock,
+    titleKey: "about.feature.fastDeliveryTitle",
+    descriptionKey: "about.feature.fastDeliveryDesc",
+  },
+  {
+    icon: Shield,
+    titleKey: "about.feature.qualityGuaranteeTitle",
+    descriptionKey: "about.feature.qualityGuaranteeDesc",
+  },
+  {
+    icon: Truck,
+    titleKey: "about.feature.deliveryTitle",
+    descriptionKey: "about.feature.deliveryDesc",
+  },
+  {
+    icon: Users,
+    titleKey: "about.feature.supportTitle",
+    descriptionKey: "about.feature.supportDesc",
+  },
+]
+
+
   return (
     <section className="py-16 bg-gray-50">
       <div className="container mx-auto px-4">
@@ -47,8 +51,8 @@ export function AboutSection() {
                   <div className="w-16 h-16 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
                     <IconComponent className="h-8 w-8" />
                   </div>
-                  <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
-                  <p className="text-gray-600 text-sm">{feature.description}</p>
+                  <h3 className="font-semibold text-lg mb-2">{t(feature.titleKey)}</h3>
+                  <p className="text-gray-600 text-sm">{t(feature.descriptionKey)}</p>
                 </CardContent>
               </Card>
             )

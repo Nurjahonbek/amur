@@ -9,8 +9,6 @@ import { RestaurantSeating } from "@/components/featured-foods"
 // import { Categories } from "@/components/categories"
 import { AboutSection } from "@/components/about-section"
 import { useLanguage } from "@/hooks/use-language"
-import { LanguageSwitcher } from "@/components/language-switcher"
-
 export default function HomePage() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -31,9 +29,6 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen">
-      {/* <div className="fixed top-4  text-center  z-50">
-        <LanguageSwitcher />
-      </div> */}
       <HeroSection />
 
       {/* <Categories /> */}
