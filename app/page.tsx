@@ -6,39 +6,42 @@ import { useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { HeroSection } from "@/components/hero-section"
 import { RestaurantSeating } from "@/components/featured-foods"
-// import { Categories } from "@/components/categories"
+
 import { AboutSection } from "@/components/about-section"
 import { useLanguage } from "@/hooks/use-language"
 import { useAuth } from "@/hooks/use-auth"
+
 export default function HomePage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { t } = useLanguage()  // QO'SHILDI
-
+  const { t } = useLanguage()
 
   const { login, isLoading, isAuthenticated } = useAuth()
-  const loginHandler = async () => {
-    try {
-      const phone = searchParams.get("phone")
-      const password = searchParams.get("password")
-      await login({ number: String(phone), password: String(password) })
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   useEffect(() => {
-    // Check if there's a redirect parameter
     const redirect = searchParams.get("redirect")
+    const phoneParam = searchParams.get("phone")
+    const passwordParam = searchParams.get("password")
 
+    // 1. Redirect logikasini boshqarish
     if (redirect === "saboy") {
-      // Redirect to saboy page or show saboy content
       router.push("/saboy")
     } else if (redirect === "dastafka") {
-      // Redirect to dastafka page or show dastafka content
       router.push("/dastafka")
     }
-  }, [searchParams, router])
+    if (phoneParam && passwordParam && !isAuthenticated && !isLoading) {
+      const attemptAutoLogin = async () => {
+        try {
+          console.log("Attempting auto-login with phone:", phoneParam);
+          await login({ number: String(phoneParam), password: String(passwordParam) });
+          console.log("Auto-login successful!");
+        } catch (error) {
+          console.error("Auto-login failed:", error);
+        }
+      };
+      attemptAutoLogin();
+    }
+  }, [searchParams, router, login, isAuthenticated, isLoading]) // Dependency listiga login, isAuthenticated, isLoading qo'shildi
 
   return (
     <div className="min-h-screen">
