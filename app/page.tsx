@@ -9,10 +9,23 @@ import { RestaurantSeating } from "@/components/featured-foods"
 // import { Categories } from "@/components/categories"
 import { AboutSection } from "@/components/about-section"
 import { useLanguage } from "@/hooks/use-language"
+import { useAuth } from "@/hooks/use-auth"
 export default function HomePage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { t } = useLanguage()  // QO'SHILDI
+
+
+  const { login, isLoading, isAuthenticated } = useAuth()
+  const loginHandler = async () => {
+    try {
+      const phone = searchParams.get("phone")
+      const password = searchParams.get("password")
+      await login({ number: String(phone), password: String(password) })
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
     // Check if there's a redirect parameter

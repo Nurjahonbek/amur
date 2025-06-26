@@ -18,7 +18,7 @@ export default function MenuPage() {
   const [categories, setCategories] = useState<Category[]>([])
   const [filteredFoods, setFilteredFoods] = useState<Food[]>([])
   const [searchQuery, setSearchQuery] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState("all")
+  const [selectedCategory, setSelectedCategory] = useState("")
   const [sortBy, setSortBy] = useState("id")
   const [isLoading, setIsLoading] = useState(true)
   const { addItem, removeItem, items } = useCart()
@@ -371,3 +371,21 @@ export default function MenuPage() {
     </div>
   )
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
