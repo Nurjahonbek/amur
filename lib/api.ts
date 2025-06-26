@@ -1,4 +1,20 @@
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://uzjoylar-yoqj.onrender.com/api"
+
+// Get current language from localStorage (for non-hook contexts)
+const getCurrentLanguage = () => {
+  if (typeof window === 'undefined') return 'uz'
+  try {
+    const stored = localStorage.getItem('language-storage')
+    if (stored) {
+      const parsed = JSON.parse(stored)
+      return parsed.state?.language || 'uz'
+    }
+  } catch {
+    // fallback if parsing fails
+  }
+  return 'uz'
+}
 
 // API response types
 export interface ApiResponse<T> {
@@ -294,7 +310,7 @@ export const api = {
 
     const response = await fetch(`${API_BASE_URL}/foods?${searchParams}`, {
       headers: {
-        "Accept-Language": "uz",
+        "Accept-Language": getCurrentLanguage(),
       },
     })
 
@@ -309,7 +325,7 @@ export const api = {
   async getFood(id: string): Promise<Food> {
     const response = await fetch(`${API_BASE_URL}/foods/${id}`, {
       headers: {
-        "Accept-Language": "uz",
+        "Accept-Language": getCurrentLanguage(),
       },
     })
 
@@ -324,7 +340,7 @@ export const api = {
   async getCategories(): Promise<Category[]> {
     const response = await fetch(`${API_BASE_URL}/categories`, {
       headers: {
-        "Accept-Language": "uz",
+        "Accept-Language": getCurrentLanguage(),
       },
     })
 
@@ -358,7 +374,7 @@ export const api = {
 
     const response = await fetch(`${API_BASE_URL}/search?${searchParams}`, {
       headers: {
-        "Accept-Language": "uz",
+        "Accept-Language": getCurrentLanguage(),
       },
     })
 

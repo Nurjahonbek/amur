@@ -82,13 +82,13 @@ export function CartSheet({ open, onOpenChange }: CartSheetProps) {
       <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent className="w-full sm:max-w-lg">
           <SheetHeader>
-            <SheetTitle>Savat</SheetTitle>
+            <SheetTitle>{t('sheet')}</SheetTitle>
           </SheetHeader>
           <div className="flex flex-col items-center justify-center h-full space-y-4">
             <ShoppingBag className="h-16 w-16 text-gray-300" />
             <div className="text-center">
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Savat bo'sh</h3>
-              <p className="text-gray-500 mb-4">Buyurtma berish uchun taomlarni savatga qo'shing</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">{t('card.sheet')}</h3>
+              <p className="text-gray-500 mb-4">{t('card.one')}</p>
               <Button asChild onClick={() => onOpenChange(false)}>
                 <Link href="/menu">{t('nav.menu')}</Link>
               </Button>
@@ -104,8 +104,8 @@ export function CartSheet({ open, onOpenChange }: CartSheetProps) {
       <SheetContent className="w-full sm:max-w-lg flex flex-col">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
-            Savat
-            <Badge variant="secondary">{itemCount} ta mahsulot</Badge>
+            {t('sheet')}
+            <Badge variant="secondary">{itemCount} {t('categories.items')}</Badge>
           </SheetTitle>
         </SheetHeader>
 
@@ -166,11 +166,11 @@ export function CartSheet({ open, onOpenChange }: CartSheetProps) {
 
         <div className="border-t pt-4 space-y-4">
           <div className="flex items-center justify-between text-lg font-semibold">
-            <span>Jami:</span>
+            <span>{t('cart.total')}:</span>
             <span>{formatPrice(total)}</span>
           </div>
           <Button className="w-full" size="lg" asChild onClick={() => onOpenChange(false)}>
-            <Link href="/checkout">Buyurtma berish</Link>
+            <Link href="/checkout">{t('hero.orderNow')}</Link>
           </Button>
         </div>
       </SheetContent>

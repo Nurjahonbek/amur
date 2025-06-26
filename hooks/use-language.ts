@@ -17,6 +17,7 @@ const translations = {
     // Navigation
     "nav.home": "Bosh sahifa",
     "nav.menu": "Menyu",
+    "menu.subtitle": "Bizning keng assortimentimizdan o'zingizga yoqqan taomni tanlang",
     "nav.checkout": "To'lov",
     "nav.orders": "Buyurtmalar",
     "nav.tables": "Stollar",
@@ -56,6 +57,7 @@ const translations = {
 
     // Featured
     "featured.title": "Mashhur taomlar",
+    "featured.popular": "Mashhur",
 
     // Food
     "food.addToCart": "Savatga qo'shish",
@@ -69,6 +71,7 @@ const translations = {
     // Search & Sort
     "search.placeholder": "Taom qidirish...",
     "search.noResults": "Hech narsa topilmadi",
+    "search.noResultsDesc": "Qidiruv so'zini o'zgartiring yoki boshqa kategoriyani tanlang",
     "sort.title": "Saralash",
     "sort.name": "Nom bo'yicha",
     "sort.priceLow": "Arzon narx",
@@ -208,6 +211,7 @@ const translations = {
     // Navigation
     "nav.home": "Главная",
     "nav.menu": "Меню",
+    "menu.subtitle": "Выберите понравившееся блюдо из нашего широкого ассортимента",
     "nav.checkout": "Оплата",
     "nav.orders": "Заказы",
     "nav.tables": "Столы",
@@ -246,6 +250,7 @@ const translations = {
 
     // Featured
     "featured.title": "Популярные блюда",
+    "featured.popular": "Популярный",
 
     // Food
     "food.addToCart": "В корзину",
@@ -259,6 +264,7 @@ const translations = {
     // Search & Sort
     "search.placeholder": "Поиск блюд...",
     "search.noResults": "Ничего не найдено",
+    "search.noResultsDesc": "Измените поисковый запрос или выберите другую категорию",
     "sort.title": "Сортировка",
     "sort.name": "По названию",
     "sort.priceLow": "Дешевые",
@@ -399,6 +405,7 @@ const translations = {
     // Navigation
     "nav.home": "Home",
     "nav.menu": "Menu",
+    "menu.subtitle": "Choose your favorite dish from our wide assortment",
     "nav.checkout": "Checkout",
     "nav.orders": "Orders",
     "nav.tables": "Tables",
@@ -425,6 +432,7 @@ const translations = {
 
     // Featured
     "featured.title": "Featured Foods",
+    "featured.popular": "Popular",
 
     // Food
     "food.addToCart": "Add to Cart",
@@ -438,6 +446,7 @@ const translations = {
     // Search & Sort
     "search.placeholder": "Search foods...",
     "search.noResults": "No results found",
+    "search.noResultsDesc": "Change your search term or select a different category",
     "sort.title": "Sort by",
     "sort.name": "Name",
     "sort.priceLow": "Price: Low to High",

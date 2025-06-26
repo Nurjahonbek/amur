@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState, useEffect } from "react"
@@ -10,6 +11,7 @@ import { Star, Clock, Plus, Search, Filter, Minus } from "lucide-react"
 import { useCart } from "@/hooks/use-cart"
 import { useSearchParams } from "next/navigation"
 import { api, type Food, type Category } from "@/lib/api"
+import { useLanguage } from "@/hooks/use-language"
 
 export default function MenuPage() {
   const [foods, setFoods] = useState<Food[]>([])
@@ -20,6 +22,7 @@ export default function MenuPage() {
   const [sortBy, setSortBy] = useState("id")
   const [isLoading, setIsLoading] = useState(true)
   const { addItem, removeItem, items } = useCart()
+  const { language, t } = useLanguage()
 
   // Helper to get item quantity from cart items
   const getItemQuantity = (id: string) => {
@@ -38,14 +41,14 @@ export default function MenuPage() {
   // Helper function to fix image URL
   const getImageUrl = (imageUrl: string) => {
     if (!imageUrl) return "/placeholder.svg?height=200&width=300"
-    
+
     // Check if imageUrl already contains localhost or starts with http
     if (imageUrl.includes('localhost') || imageUrl.startsWith('http')) {
       // Replace localhost URL with demo.iqbo.uz and extract the path
       const urlPath = imageUrl.replace(/^https?:\/\/[^\/]+/, '')
       return `https://uzjoylar-yoqj.onrender.com${urlPath}`
     }
-    
+
     // If it's just a path, prepend the base URL
     return `https://uzjoylar-yoqj.onrender.com${imageUrl.startsWith('/') ? imageUrl : '/' + imageUrl}`
   }
@@ -58,7 +61,7 @@ export default function MenuPage() {
 
         // Load categories
         const categoriesData = await api.getCategories()
-        setCategories([{ key: "all", name: "Barchasi" }, ...categoriesData])
+        setCategories([{ key: "all", name: t("categories.all") }, ...categoriesData])
 
         // Load foods
         const foodsData = await api.getFoods({
@@ -75,7 +78,7 @@ export default function MenuPage() {
     }
 
     loadData()
-  }, [])
+  }, [language, t])
 
   // Handle URL category parameter
   useEffect(() => {
@@ -158,7 +161,7 @@ export default function MenuPage() {
   }, [foods, selectedCategory, searchQuery, sortBy, categories])
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("uz-UZ").format(price) + " so'm"
+    return new Intl.NumberFormat("uz-UZ").format(price) + " " + t("currency")
   }
 
   const handleAddItem = (food: Food) => {
@@ -176,10 +179,10 @@ export default function MenuPage() {
     if (currentQuantity > 1) {
       // Agar useCart hook'ida decreaseItem funksiyasi bo'lsa
       // decreaseItem(foodId)
-      
+
       // Yoki removeItem funksiyasini o'zgartiring - faqat miqdorni kamaytirish uchun
       // Agar removeItem faqat butun elementni o'chirsa, quyidagi yechimni ishlating:
-      
+
       // Mavjud elementni topamiz
       const item = items.find((item) => item.id === foodId)
       if (item) {
@@ -201,7 +204,7 @@ export default function MenuPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="text-center animate-pulse">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Menyu yuklanmoqda...</p>
+          <p className="mt-4 text-gray-600">{t("common.loading")}</p>
         </div>
       </div>
     )
@@ -210,8 +213,8 @@ export default function MenuPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8 animate-fade-in-up">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Menyu</h1>
-        <p className="text-gray-600">Bizning keng assortimentimizdan o'zingizga yoqqan taomni tanlang</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-4">{t("nav.menu")}</h1>
+        <p className="text-gray-600">{t("menu.subtitle")}</p>
       </div>
 
       {/* Filters */}
@@ -220,7 +223,7 @@ export default function MenuPage() {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
             <Input
-              placeholder="Taom nomini kiriting..."
+              placeholder={t("search.placeholder")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10 transition-all duration-200 focus:scale-105"
@@ -228,7 +231,7 @@ export default function MenuPage() {
           </div>
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
             <SelectTrigger className="w-full sm:w-48 transition-all duration-200 focus:scale-105">
-              <SelectValue placeholder="Kategoriya" />
+              <SelectValue placeholder={t("categories.title")} />
             </SelectTrigger>
             <SelectContent>
               {categories.map((category) => (
@@ -240,14 +243,14 @@ export default function MenuPage() {
           </Select>
           <Select value={sortBy} onValueChange={setSortBy}>
             <SelectTrigger className="w-full sm:w-48 transition-all duration-200 focus:scale-105">
-              <SelectValue placeholder="Saralash" />
+              <SelectValue placeholder={t("sort.title")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="id">ID bo'yicha</SelectItem>
-              <SelectItem value="price_asc">Narx (arzon)</SelectItem>
-              <SelectItem value="price_desc">Narx (qimmat)</SelectItem>
-              <SelectItem value="rating">Reyting</SelectItem>
-              <SelectItem value="name">Nom</SelectItem>
+              <SelectItem value="id">ID</SelectItem>
+              <SelectItem value="price_asc">{t("sort.priceLow")}</SelectItem>
+              <SelectItem value="price_desc">{t("sort.priceHigh")}</SelectItem>
+              <SelectItem value="rating">{t("sort.rating")}</SelectItem>
+              <SelectItem value="name">{t("sort.name")}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -255,14 +258,14 @@ export default function MenuPage() {
 
       {/* Results */}
       <div className="mb-4 animate-fade-in-up animation-delay-400">
-        <p className="text-gray-600">{filteredFoods.length} ta taom topildi</p>
+        <p className="text-gray-600">{filteredFoods.length} {t("categories.items")}</p>
       </div>
 
       {/* Food Grid */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {filteredFoods.map((food, index) => {
           const quantity = getItemQuantity(food.id)
-          
+
           return (
             <Card
               key={food.id}
@@ -279,13 +282,13 @@ export default function MenuPage() {
                   }}
                 />
 
-                {food.is_popular && <Badge className="absolute top-2 left-2 bg-orange-500 animate-pulse">Mashhur</Badge>}
+                {food.is_popular && <Badge className="absolute top-2 left-2 bg-orange-500 animate-pulse">{t("featured.popular")}</Badge>}
                 {food.discount > 0 && (
                   <Badge className="absolute top-2 right-2 bg-red-500 animate-bounce">-{food.discount}%</Badge>
                 )}
                 {!food.isThere && (
                   <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                    <Badge variant="secondary">Tugagan</Badge>
+                    <Badge variant="secondary">{t("food.outOfStock")}</Badge>
                   </div>
                 )}
               </div>
@@ -308,7 +311,7 @@ export default function MenuPage() {
 
                 <div className="flex items-center gap-2 mb-3">
                   <Clock className="h-4 w-4 text-gray-400" />
-                  <span className="text-sm text-gray-600">{food.preparation_time} daqiqa</span>
+                  <span className="text-sm text-gray-600">{food.preparation_time} {t("hero.minute")}</span>
                 </div>
 
                 <div className="flex items-center justify-between">
@@ -318,7 +321,7 @@ export default function MenuPage() {
                       <span className="text-sm text-gray-500 line-through">{formatPrice(food.original_price)}</span>
                     )}
                   </div>
-                  
+
                   {quantity === 0 ? (
                     <Button
                       size="sm"
@@ -327,7 +330,7 @@ export default function MenuPage() {
                       className="transform hover:scale-110 transition-all duration-200"
                     >
                       <Plus className="h-4 w-4 mr-1" />
-                      Qo'shish
+                      {t("food.addToCart")}
                     </Button>
                   ) : (
                     <div className="flex items-center gap-2">
@@ -361,8 +364,8 @@ export default function MenuPage() {
           <div className="text-gray-400 mb-4">
             <Filter className="h-16 w-16 mx-auto" />
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Hech narsa topilmadi</h3>
-          <p className="text-gray-500">Qidiruv so'zini o'zgartiring yoki boshqa kategoriyani tanlang</p>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">{t("search.noResults")}</h3>
+          <p className="text-gray-500">{t("search.noResultsDesc")}</p>
         </div>
       )}
     </div>
