@@ -48,6 +48,7 @@ const translations = {
     "about.feature.deliveryDesc": "Sizni uyingizga yetkazib berish xizmati.",
     "about.feature.supportTitle": "10:00-00:00 Qo'llab-quvvatlash",
     "about.feature.supportDesc": "Har qanday savolingiz bo'lsa, biz doimo yordam berishga tayyormiz",
+    "about.description" : "Biz mijozlarimizga eng yaxshi xizmat va sifatli taomlarni taqdim etishga intilamiz",
 
     // Categories
     "categories.title": "Taom turlari",
@@ -348,6 +349,8 @@ const translations = {
     "about.feature.deliveryDesc": "Служба доставки к вашему дому.",
     "about.feature.supportTitle": "Поддержка 10:00-00:00",
     "about.feature.supportDesc": "Если у вас есть вопросы, мы всегда готовы помочь",
+    "about.description" : "Мы стремимся предоставить нашим клиентам лучший сервис и качественную еду.",
+    "about.one": "Почему ресторан «Амур»?",
 
     // Featured
     "featured.title": "Популярные блюда",
@@ -657,6 +660,7 @@ const translations = {
     "sort.priceHigh": "Price: High to Low",
     "sort.rating": "Rating",
 
+
     // Cart
     "cart.title": "Shopping Cart",
     "cart.empty": "Your cart is empty",
@@ -782,6 +786,26 @@ const translations = {
     "auth.password": "Password",
     "auth.confirmPassword": "Confirm Password",
     "auth.forgotPassword": "Forgot Password?",
+
+    // About
+    "about.title": "About Us",
+    "about.description": "We specialize in quality food and professional service",
+    "about.fastDelivery": "Fast Delivery",
+    "about.fastDeliveryDesc": "We deliver in 30 minutes",
+    "about.gpsTracking": "GPS Tracking",
+    "about.gpsTrackingDesc": "Track your order in real-time",
+    "about.support": "24/7 Support",
+    "about.supportDesc": "Always at your service",
+    "about.one": "Why Amur Restaurant?",
+    "about.des": "We will deliver to your home within 30-40 minutes.",
+    "about.feature.fastDeliveryTitle": "Fast Delivery",
+    "about.feature.fastDeliveryDesc": "We will deliver to your home within 30-40 minutes.",
+    "about.feature.qualityGuaranteeTitle": "Quality Guarantee",
+    "about.feature.qualityGuaranteeDesc": "We use only fresh and high-quality products.",
+    "about.feature.deliveryTitle": "Delivery Service",
+    "about.feature.deliveryDesc": "Delivery service to your home.",
+    "about.feature.supportTitle": "10:00-00:00 Support",
+    "about.feature.supportDesc": "If you have any questions, we are always ready to help.",
 
     // Common
     "common.loading": "Loading...",
