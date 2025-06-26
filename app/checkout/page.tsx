@@ -1,3 +1,5 @@
+
+
 "use client"
 
 import type React from "react"
@@ -17,12 +19,14 @@ import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
 import { api, type CreateOrderRequest, type RestaurantTable } from "@/lib/api"
 import { AuthModal } from "@/components/auth/auth-modal"
+import { useLanguage } from "@/hooks/use-language"
 
 export default function CheckoutPage() {
   const { items, total, clearCart } = useCart()
   const { user, token, isAuthenticated } = useAuth()
   const router = useRouter()
   const { toast } = useToast()
+  const { t } = useLanguage() // Assuming t is available from useLanguage
 
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [deliveryType, setDeliveryType] = useState("delivery")
@@ -84,7 +88,7 @@ export default function CheckoutPage() {
   }, [isAuthenticated, user])
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("uz-UZ").format(price) + " so'm"
+    return new Intl.NumberFormat("uz-UZ").format(price) + ` ${t("sum")}` // "so'm"
   }
 
   const deliveryFee = deliveryType === "delivery" ? 5000 : 0
@@ -95,8 +99,8 @@ export default function CheckoutPage() {
 
     if (!navigator.geolocation) {
       toast({
-        title: "Geolocation qo'llab-quvvatlanmaydi",
-        description: "Brauzeringiz geolocation xizmatini qo'llab-quvvatlamaydi",
+        title: t("geolocation_not_supported_title"), // "Geolocation qo'llab-quvvatlanmaydi"
+        description: t("geolocation_not_supported_description"), // "Brauzeringiz geolocation xizmatini qo'llab-quvvatlamaydi"
         variant: "destructive",
       })
       setIsGettingLocation(false)
@@ -111,16 +115,16 @@ export default function CheckoutPage() {
           longitude: position.coords.longitude.toString(),
         }))
         toast({
-          title: "Joylashuv aniqlandi",
-          description: "Sizning joylashuvingiz muvaffaqiyatli aniqlandi",
+          title: t("location_detected_title"), // "Joylashuv aniqlandi"
+          description: t("location_detected_description"), // "Sizning joylashuvingiz muvaffaqiyatli aniqlandi"
         })
         setIsGettingLocation(false)
       },
       (error) => {
         console.error("Geolocation error:", error)
         toast({
-          title: "Joylashuvni aniqlab bo'lmadi",
-          description: "Joylashuvni aniqlashda xatolik yuz berdi. Qo'lda kiriting.",
+          title: t("location_detection_failed_title"), // "Joylashuvni aniqlab bo'lmadi"
+          description: t("location_detection_failed_description"), // "Joylashuvni aniqlashda xatolik yuz berdi. Qo'lda kiriting."
           variant: "destructive",
         })
         setIsGettingLocation(false)
@@ -180,18 +184,13 @@ export default function CheckoutPage() {
       localStorage.removeItem("delivery_type")
       localStorage.removeItem("table_info")
 
-      toast({
-        title: "Buyurtma yaratildi! 🎉",
-        description: `Buyurtma raqami: ${response.order.order_id}. Taxminiy vaqt: ${response.estimated_time} daqiqa`,
-      })
-
       router.push(`/orders`)
     } catch (error) {
       console.error("Order creation failed:", error)
       toast({
-        title: "Xatolik yuz berdi",
+        title: t("error_occurred_title"), // "Xatolik yuz berdi"
         description:
-          error instanceof Error ? error.message : "Buyurtma yaratishda xatolik yuz berdi. Qaytadan urinib ko'ring.",
+          error instanceof Error ? error.message : t("order_creation_failed_generic_description"), // "Buyurtma yaratishda xatolik yuz berdi. Qaytadan urinib ko'ring."
         variant: "destructive",
       })
     } finally {
@@ -203,13 +202,13 @@ export default function CheckoutPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center animate-fade-in-up">
-          <h1 className="text-2xl font-bold mb-4">Savat bo'sh</h1>
-          <p className="text-gray-600 mb-4">Buyurtma berish uchun avval taomlarni savatga qo'shing</p>
+          <h1 className="text-2xl font-bold mb-4">{t("cart_empty_title")}</h1> {/* "Savat bo'sh" */}
+          <p className="text-gray-600 mb-4">{t("cart_empty_description")}</p> {/* "Buyurtma berish uchun avval taomlarni savatga qo'shing" */}
           <Button
             onClick={() => router.push("/menu")}
             className="transform hover:scale-105 transition-all duration-200"
           >
-            Menuni ko'rish
+            {t("view_menu_button")} {/* "Menuni ko'rish" */}
           </Button>
         </div>
       </div>
@@ -218,7 +217,7 @@ export default function CheckoutPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 animate-fade-in-up">Buyurtma berish</h1>
+      <h1 className="text-3xl font-bold mb-8 animate-fade-in-up">{t("place_order_heading")}</h1> {/* "Buyurtma berish" */}
 
       <form onSubmit={handleSubmit}>
         <div className="grid lg:grid-cols-3 gap-8">
@@ -227,11 +226,11 @@ export default function CheckoutPage() {
             {/* Customer Info */}
             <Card className="animate-fade-in-up animation-delay-200">
               <CardHeader>
-                <CardTitle>Shaxsiy ma'lumotlar</CardTitle>
+                <CardTitle>{t("personal_info_title")}</CardTitle> {/* "Shaxsiy ma'lumotlar" */}
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="name">To'liq ism *</Label>
+                  <Label htmlFor="name">{t("full_name_label")}</Label> {/* "To'liq ism *" */}
                   <Input
                     id="name"
                     value={customerInfo.name}
@@ -241,7 +240,7 @@ export default function CheckoutPage() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="phone">Telefon raqam *</Label>
+                  <Label htmlFor="phone">{t("phone_number_label")}</Label> {/* "Telefon raqam *" */}
                   <Input
                     id="phone"
                     type="tel"
@@ -249,11 +248,11 @@ export default function CheckoutPage() {
                     value={customerInfo.phone}
                     readOnly
                     className="bg-gray-50 cursor-not-allowed"
-                    title="Telefon raqamni o'zgartirib bo'lmaydi"
+                    title={t("phone_number_readonly_tooltip")} // "Telefon raqamni o'zgartirib bo'lmaydi"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="email">Email (ixtiyoriy)</Label>
+                  <Label htmlFor="email">{t("email_label")}</Label> {/* "Email (ixtiyoriy)" */}
                   <Input
                     id="email"
                     type="email"
@@ -268,7 +267,7 @@ export default function CheckoutPage() {
             {/* Delivery Type */}
             <Card className="animate-fade-in-up animation-delay-400">
               <CardHeader>
-                <CardTitle>Yetkazib berish turi</CardTitle>
+                <CardTitle>{t("delivery_type_title")}</CardTitle> {/* "Yetkazib berish turi" */}
               </CardHeader>
               <CardContent>
                 <RadioGroup value={deliveryType} onValueChange={setDeliveryType}>
@@ -277,9 +276,9 @@ export default function CheckoutPage() {
                     <Label htmlFor="delivery" className="flex-1 cursor-pointer">
                       <div className="flex items-center gap-2">
                         <MapPin className="h-4 w-4" />
-                        <span className="font-medium">Yetkazib berish</span>
+                        <span className="font-medium">{t("delivery_option_delivery")}</span> {/* "Yetkazib berish" */}
                       </div>
-                      <p className="text-sm text-gray-500 mt-1">Sizning manzilingizga yetkazib beramiz</p>
+                      <p className="text-sm text-gray-500 mt-1">{t("delivery_option_delivery_description")}</p> {/* "Sizning manzilingizga yetkazib beramiz" */}
                     </Label>
                   </div>
                   <div className="flex items-center space-x-2 p-4 border rounded-lg hover:bg-gray-50 transition-colors duration-200">
@@ -287,9 +286,9 @@ export default function CheckoutPage() {
                     <Label htmlFor="pickup" className="flex-1 cursor-pointer">
                       <div className="flex items-center gap-2">
                         <Store className="h-4 w-4" />
-                        <span className="font-medium">O'zi olib ketish</span>
+                        <span className="font-medium">{t("delivery_option_pickup")}</span> {/* "O'zi olib ketish" */}
                       </div>
-                      <p className="text-sm text-gray-500 mt-1">Restoranidan o'zingiz olib ketasiz</p>
+                      <p className="text-sm text-gray-500 mt-1">{t("delivery_option_pickup_description")}</p> {/* "Restoranidan o'zingiz olib ketasiz" */}
                     </Label>
                   </div>
                   <div className="flex items-center space-x-2 p-4 border rounded-lg hover:bg-gray-50 transition-colors duration-200">
@@ -297,9 +296,9 @@ export default function CheckoutPage() {
                     <Label htmlFor="restaurant" className="flex-1 cursor-pointer">
                       <div className="flex items-center gap-2">
                         <Utensils className="h-4 w-4" />
-                        <span className="font-medium">Restoranda</span>
+                        <span className="font-medium">{t("delivery_option_at_restaurant")}</span> {/* "Restoranda" */}
                       </div>
-                      <p className="text-sm text-gray-500 mt-1">Restoran ichida iste'mol qilasiz</p>
+                      <p className="text-sm text-gray-500 mt-1">{t("delivery_option_at_restaurant_description")}</p> {/* "Restoran ichida iste'mol qilasiz" */}
                     </Label>
                   </div>
                 </RadioGroup>
@@ -310,14 +309,14 @@ export default function CheckoutPage() {
             {deliveryType === "delivery" && (
               <Card className="animate-fade-in-up animation-delay-600">
                 <CardHeader>
-                  <CardTitle>Yetkazib berish manzili</CardTitle>
+                  <CardTitle>{t("delivery_address_title")}</CardTitle> {/* "Yetkazib berish manzili" */}
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <Label htmlFor="address">Manzil *</Label>
+                    <Label htmlFor="address">{t("address_label")}</Label> {/* "Manzil *" */}
                     <Textarea
                       id="address"
-                      placeholder="To'liq manzilingizni kiriting"
+                      placeholder={t("address_placeholder")} // "To'liq manzilingizni kiriting"
                       value={deliveryInfo.address}
                       onChange={(e) => setDeliveryInfo({ ...deliveryInfo, address: e.target.value })}
                       required
@@ -325,7 +324,7 @@ export default function CheckoutPage() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="delivery-phone">Telefon raqam *</Label>
+                    <Label htmlFor="delivery-phone">{t("phone_number_label")}</Label> {/* "Telefon raqam *" */}
                     <Input
                       id="delivery-phone"
                       type="tel"
@@ -333,7 +332,7 @@ export default function CheckoutPage() {
                       value={deliveryInfo.phone}
                       readOnly
                       className="bg-gray-50 cursor-not-allowed"
-                      title="Telefon raqamni o'zgartirib bo'lmaydi"
+                      title={t("phone_number_readonly_tooltip")} // "Telefon raqamni o'zgartirib bo'lmaydi"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
@@ -370,7 +369,7 @@ export default function CheckoutPage() {
                     className="w-full transform hover:scale-105 transition-all duration-200"
                   >
                     <Navigation className="h-4 w-4 mr-2" />
-                    {isGettingLocation ? "Joylashuv aniqlanmoqda..." : "Joriy joylashuvni aniqlash"}
+                    {isGettingLocation ? t("getting_location_button") : t("detect_location_button")} {/* "Joylashuv aniqlanmoqda..." : "Joriy joylashuvni aniqlash" */}
                   </Button>
                 </CardContent>
               </Card>
@@ -380,7 +379,7 @@ export default function CheckoutPage() {
             {deliveryType === "atTheRestaurant" && preSelectedTable && (
               <Card className="animate-fade-in-up animation-delay-600">
                 <CardHeader>
-                  <CardTitle>Tanlangan stol</CardTitle>
+                  <CardTitle>{t("selected_table_title")}</CardTitle> {/* "Tanlangan stol" */}
                 </CardHeader>
                 <CardContent>
                   <div className="bg-green-50 border border-green-200 rounded-lg p-4">
@@ -391,7 +390,7 @@ export default function CheckoutPage() {
                           {preSelectedTable.zone} - {preSelectedTable.name}
                         </h4>
                         <p className="text-green-700 text-sm">
-                          Siz bu stoldan buyurtma berasiz. Taomlar to'g'ridan-to'g'ri bu stolga yetkaziladi.
+                          {t("selected_table_description")} {/* "Siz bu stoldan buyurtma berasiz. Taomlar to'g'ridan-to'g'ri bu stolga yetkaziladi." */}
                         </p>
                       </div>
                     </div>
@@ -403,7 +402,7 @@ export default function CheckoutPage() {
             {/* Payment Method */}
             <Card className="animate-fade-in-up animation-delay-800">
               <CardHeader>
-                <CardTitle>To'lov usuli</CardTitle>
+                <CardTitle>{t("payment_method_title")}</CardTitle> {/* "To'lov usuli" */}
               </CardHeader>
               <CardContent>
                 <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
@@ -412,7 +411,7 @@ export default function CheckoutPage() {
                     <Label htmlFor="cash" className="flex-1 cursor-pointer">
                       <div className="flex items-center gap-2">
                         <Banknote className="h-4 w-4" />
-                        <span className="font-medium">Naqd pul</span>
+                        <span className="font-medium">{t("payment_method_cash")}</span> {/* "Naqd pul" */}
                       </div>
                     </Label>
                   </div>
@@ -421,7 +420,7 @@ export default function CheckoutPage() {
                     <Label htmlFor="card" className="flex-1 cursor-pointer">
                       <div className="flex items-center gap-2">
                         <CreditCard className="h-4 w-4" />
-                        <span className="font-medium">Bank kartasi</span>
+                        <span className="font-medium">{t("payment_method_card")}</span> {/* "Bank kartasi" */}
                       </div>
                     </Label>
                   </div>
@@ -430,7 +429,7 @@ export default function CheckoutPage() {
                     <Label htmlFor="click" className="flex-1 cursor-pointer">
                       <div className="flex items-center gap-2">
                         <Smartphone className="h-4 w-4" />
-                        <span className="font-medium">Click</span>
+                        <span className="font-medium">{t("payment_method_click")}</span> {/* "Click" */}
                       </div>
                     </Label>
                   </div>
@@ -439,7 +438,7 @@ export default function CheckoutPage() {
                     <Label htmlFor="payme" className="flex-1 cursor-pointer">
                       <div className="flex items-center gap-2">
                         <Smartphone className="h-4 w-4" />
-                        <span className="font-medium">Payme</span>
+                        <span className="font-medium">{t("payment_method_payme")}</span> {/* "Payme" */}
                       </div>
                     </Label>
                   </div>
@@ -450,11 +449,11 @@ export default function CheckoutPage() {
             {/* Special Instructions */}
             <Card className="animate-fade-in-up animation-delay-1000">
               <CardHeader>
-                <CardTitle>Qo'shimcha izohlar</CardTitle>
+                <CardTitle>{t("special_instructions_title")}</CardTitle> {/* "Qo'shimcha izohlar" */}
               </CardHeader>
               <CardContent>
                 <Textarea
-                  placeholder="Maxsus talablar yoki izohlar (ixtiyoriy)"
+                  placeholder={t("special_instructions_placeholder")} // "Maxsus talablar yoki izohlar (ixtiyoriy)"
                   value={specialInstructions}
                   onChange={(e) => setSpecialInstructions(e.target.value)}
                   className="transition-all duration-200 focus:scale-105"
@@ -467,7 +466,7 @@ export default function CheckoutPage() {
           <div>
             <Card className="sticky top-4 animate-fade-in-up animation-delay-1200">
               <CardHeader>
-                <CardTitle>Buyurtma xulosasi</CardTitle>
+                <CardTitle>{t("order_summary_title")}</CardTitle> {/* "Buyurtma xulosasi" */}
               </CardHeader>
               <CardContent className="space-y-4">
                 {items.map((item) => (
@@ -476,10 +475,10 @@ export default function CheckoutPage() {
                     className="flex items-center space-x-3 hover:bg-gray-50 p-2 rounded transition-colors duration-200"
                   >
                     <img
-                        src={item.imageUrl ? `https://uzjoylar-yoqj.onrender.com/${item.imageUrl}` : "/placeholder.svg"}
-                        alt={item.name}
-                        className="w-12 h-12 object-cover rounded-md"
-                      />
+                      src={item.imageUrl ? `https://uzjoylar-yoqj.onrender.com/${item.imageUrl}` : "/placeholder.svg"}
+                      alt={item.name}
+                      className="w-12 h-12 object-cover rounded-md"
+                    />
 
                     <div className="flex-1 min-w-0">
                       <h4 className="font-medium text-sm">{item.name}</h4>
@@ -498,18 +497,18 @@ export default function CheckoutPage() {
 
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span>Taomlar narxi:</span>
+                    <span>{t("food_price_label")}</span> {/* "Taomlar narxi:" */}
                     <span>{formatPrice(total)}</span>
                   </div>
                   {deliveryType === "delivery" && (
                     <div className="flex justify-between text-sm">
-                      <span>Yetkazib berish:</span>
+                      <span>{t("delivery_fee_label")}</span> {/* "Yetkazib berish:" */}
                       <span>{formatPrice(deliveryFee)}</span>
                     </div>
                   )}
                   <Separator />
                   <div className="flex justify-between font-semibold text-lg">
-                    <span>Jami:</span>
+                    <span>{t("total_label")}</span> {/* "Jami:" */}
                     <span>{formatPrice(finalTotal)}</span>
                   </div>
                 </div>
@@ -521,13 +520,13 @@ export default function CheckoutPage() {
                   disabled={isSubmitting || !isAuthenticated}
                 >
                   {isSubmitting
-                    ? "Buyurtma berilmoqda..."
+                    ? t("submitting_order_button") // "Buyurtma berilmoqda..."
                     : !isAuthenticated
-                      ? "Avval tizimga kiring"
-                      : "Buyurtma berish"}
+                      ? t("login_to_order_button") // "Avval tizimga kiring"
+                      : t("place_order_button")} {/* "Buyurtma berish" */}
                 </Button>
 
-                <p className="text-xs text-gray-500 text-center">Buyurtma bergandan so'ng, siz bilan bog'lanamiz</p>
+                <p className="text-xs text-gray-500 text-center">{t("order_confirmation_note")}</p> {/* "Buyurtma bergandan so'ng, siz bilan bog'lanamiz" */}
               </CardContent>
             </Card>
           </div>
