@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Clock, MapPin, Phone, CreditCard, ChefHat, CheckCircle, Truck, Package } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
+import { useLanguage } from "@/hooks/use-language"
 
 interface OrderItem {
   id: string
@@ -110,37 +111,50 @@ const mockOrderData: OrderData = {
   ],
 }
 
-const statusConfig = {
-  pending: { label: "Kutilmoqda", color: "bg-yellow-100 text-yellow-800", icon: Clock },
-  confirmed: { label: "Tasdiqlandi", color: "bg-blue-100 text-blue-800", icon: CheckCircle },
-  preparing: { label: "Tayyorlanmoqda", color: "bg-orange-100 text-orange-800", icon: ChefHat },
-  ready: { label: "Tayyor", color: "bg-green-100 text-green-800", icon: Package },
-  delivered: { label: "Yetkazildi", color: "bg-green-100 text-green-800", icon: CheckCircle },
-  cancelled: { label: "Bekor qilindi", color: "bg-red-100 text-red-800", icon: Clock },
-}
-
-const paymentMethodLabels = {
-  cash: "Naqd pul",
-  card: "Bank kartasi",
-  click: "Click",
-  payme: "Payme",
-}
-
-const deliveryTypeLabels = {
-  delivery: "Yetkazib berish",
-  own_withdrawal: "O'zi olib ketish",
-  atTheRestaurant: "Restoranda",
-}
-
 export default function OrderDetailsPage() {
   const params = useParams()
   const router = useRouter()
   const [orderData, setOrderData] = useState<OrderData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
+  const { t, language } = useLanguage()
+
+  // Define status configurations with translation keys
+  const statusConfig = {
+    pending: { label: t("orders.pending"), color: "bg-yellow-100 text-yellow-800", icon: Clock },
+    confirmed: { label: t("orders.confirmed"), color: "bg-blue-100 text-blue-800", icon: CheckCircle },
+    preparing: { label: t("orders.preparing"), color: "bg-orange-100 text-orange-800", icon: ChefHat },
+    ready: { label: t("orders.ready"), color: "bg-green-100 text-green-800", icon: Package },
+    delivered: { label: t("orders.delivered"), color: "bg-green-100 text-green-800", icon: CheckCircle },
+    cancelled: { label: t("orders.cancelled"), color: "bg-red-100 text-red-800", icon: Clock },
+  } as const
+
+  // Define payment method labels with translation keys
+  const paymentMethodLabels = {
+    cash: t("payment_method_cash"),
+    card: t("payment_method_card"),
+    click: t("payment_method_click"),
+    payme: t("payment_method_payme"),
+  } as const
+
+  // Define delivery type labels with translation keys
+  const deliveryTypeLabels = {
+    delivery: t("delivery_option_delivery"),
+    own_withdrawal: t("delivery_option_pickup"),
+    atTheRestaurant: t("delivery_option_at_restaurant"),
+  } as const
+
+  // Define status history notes with translation keys
+  const statusHistoryNotes = {
+    "Buyurtma yaratildi": t("orders.status_history_note_created"),
+    "Buyurtma tasdiqlandi": t("orders.status_history_note_confirmed"),
+    Tayyorlanmoqda: t("orders.status_history_note_preparing"),
+  } as const
+
   useEffect(() => {
     const fetchOrder = async () => {
       try {
+        setIsLoading(true)
         // Mock API call
         await new Promise((resolve) => setTimeout(resolve, 1000))
 
@@ -161,14 +175,18 @@ export default function OrderDetailsPage() {
   }, [params.id])
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("uz-UZ").format(price) + " so'm"
+    return (
+      new Intl.NumberFormat(language === "uz" ? "uz-UZ" : language === "ru" ? "ru-RU" : "en-US").format(price) +
+      ` ${t("currency")}`
+    )
   }
 
   const formatDateTime = (dateString: string) => {
     const date = new Date(dateString)
+    const locale = language === "uz" ? "uz-UZ" : language === "ru" ? "ru-RU" : "en-US"
     return {
-      date: date.toLocaleDateString("uz-UZ"),
-      time: date.toLocaleTimeString("uz-UZ", { hour: "2-digit", minute: "2-digit" }),
+      date: date.toLocaleDateString(locale),
+      time: date.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" }),
     }
   }
 
@@ -177,7 +195,7 @@ export default function OrderDetailsPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Buyurtma ma'lumotlari yuklanmoqda...</p>
+          <p className="mt-4 text-gray-600">{t("orders.loading_order_data")}</p>
         </div>
       </div>
     )
@@ -187,9 +205,9 @@ export default function OrderDetailsPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Buyurtma topilmadi</h1>
-          <p className="text-gray-600 mb-4">Kiritilgan buyurtma raqami noto'g'ri yoki mavjud emas</p>
-          <Button onClick={() => router.push("/orders/track")}>Qaytadan qidirish</Button>
+          <h1 className="text-2xl font-bold mb-4">{t("orders.order_not_found_title")}</h1>
+          <p className="text-gray-600 mb-4">{t("orders.invalid_order_id_description")}</p>
+          <Button onClick={() => router.push("/orders/track")}>{t("orders.search_again_button")}</Button>
         </div>
       </div>
     )
@@ -205,7 +223,7 @@ export default function OrderDetailsPage() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-3xl font-bold">Buyurtma #{orderData.order_id}</h1>
+            <h1 className="text-3xl font-bold">{t("orders.order_number_title", { orderId: orderData.order_id })}</h1>
             <Badge className={currentStatus?.color}>
               <StatusIcon className="h-4 w-4 mr-1" />
               {currentStatus?.label}
@@ -221,7 +239,7 @@ export default function OrderDetailsPage() {
           <div className="lg:col-span-2 space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Buyurtma tarkibi</CardTitle>
+                <CardTitle>{t("orders.order_composition_title")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -250,7 +268,7 @@ export default function OrderDetailsPage() {
                 <Separator className="my-4" />
 
                 <div className="flex justify-between items-center text-xl font-bold">
-                  <span>Jami:</span>
+                  <span>{t("cart.total")}:</span>
                   <span>{formatPrice(orderData.total_price)}</span>
                 </div>
               </CardContent>
@@ -259,7 +277,7 @@ export default function OrderDetailsPage() {
             {/* Status Timeline */}
             <Card>
               <CardHeader>
-                <CardTitle>Buyurtma holati</CardTitle>
+                <CardTitle>{t("orders.order_status_timeline_title")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -268,6 +286,9 @@ export default function OrderDetailsPage() {
                     const IconComponent = config?.icon || Clock
                     const isActive = index === orderData.status_history.length - 1
                     const statusDateTime = formatDateTime(status.timestamp)
+
+                    // Get translated note, fallback to original if not found
+                    const translatedNote = (statusHistoryNotes as Record<string, string>)[status.note] || status.note
 
                     return (
                       <div key={index} className="flex items-start space-x-4">
@@ -285,7 +306,7 @@ export default function OrderDetailsPage() {
                             </h4>
                             <span className="text-sm text-gray-500">{statusDateTime.time}</span>
                           </div>
-                          <p className="text-sm text-gray-600 mt-1">{status.note}</p>
+                          <p className="text-sm text-gray-600 mt-1">{translatedNote}</p>
                         </div>
                       </div>
                     )
@@ -300,7 +321,7 @@ export default function OrderDetailsPage() {
             {/* Delivery Info */}
             <Card>
               <CardHeader>
-                <CardTitle>Yetkazib berish</CardTitle>
+                <CardTitle>{t("orders.delivery_info_title")}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-2">
@@ -327,7 +348,9 @@ export default function OrderDetailsPage() {
 
                 <div className="flex items-center gap-2">
                   <Clock className="h-4 w-4 text-gray-400" />
-                  <span className="text-sm">Taxminiy vaqt: {orderData.estimated_time} daqiqa</span>
+                  <span className="text-sm">
+                    {t("orders.estimated_time_label", { time: orderData.estimated_time })}
+                  </span>
                 </div>
               </CardContent>
             </Card>
@@ -335,13 +358,13 @@ export default function OrderDetailsPage() {
             {/* Payment Info */}
             <Card>
               <CardHeader>
-                <CardTitle>To'lov ma'lumotlari</CardTitle>
+                <CardTitle>{t("orders.payment_details_title")}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <CreditCard className="h-4 w-4 text-gray-400" />
-                    <span>To'lov usuli:</span>
+                    <span>{t("orders.payment_method_label")}:</span>
                   </div>
                   <span className="font-medium">
                     {paymentMethodLabels[orderData.payment_info.method as keyof typeof paymentMethodLabels]}
@@ -349,14 +372,16 @@ export default function OrderDetailsPage() {
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span>Holat:</span>
+                  <span>{t("orders.status_label")}:</span>
                   <Badge variant={orderData.payment_info.status === "paid" ? "default" : "secondary"}>
-                    {orderData.payment_info.status === "paid" ? "To'langan" : "Kutilmoqda"}
+                    {orderData.payment_info.status === "paid"
+                      ? t("orders.payment_status_paid")
+                      : t("orders.payment_status_pending")}
                   </Badge>
                 </div>
 
                 <div className="flex items-center justify-between font-semibold">
-                  <span>Summa:</span>
+                  <span>{t("orders.amount_label")}:</span>
                   <span>{formatPrice(orderData.payment_info.amount)}</span>
                 </div>
               </CardContent>
@@ -365,15 +390,15 @@ export default function OrderDetailsPage() {
             {/* Customer Info */}
             <Card>
               <CardHeader>
-                <CardTitle>Mijoz ma'lumotlari</CardTitle>
+                <CardTitle>{t("orders.customer_details_title")}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span>Ism:</span>
+                  <span>{t("orders.customer_name_label")}:</span>
                   <span className="font-medium">{orderData.user_name}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>Telefon:</span>
+                  <span>{t("orders.customer_phone_label")}:</span>
                   <span className="font-medium">{orderData.user_number}</span>
                 </div>
               </CardContent>
@@ -382,12 +407,12 @@ export default function OrderDetailsPage() {
             {/* Actions */}
             <div className="space-y-3">
               <Button variant="outline" className="w-full" onClick={() => router.push("/orders")}>
-                Buyurtmalarim
+                {t("orders.my_orders_button")}
               </Button>
 
               {orderData.status === "pending" && (
                 <Button variant="destructive" className="w-full">
-                  Buyurtmani bekor qilish
+                  {t("orders.cancel_order_button")}
                 </Button>
               )}
             </div>
@@ -397,21 +422,3 @@ export default function OrderDetailsPage() {
     </div>
   )
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -474,11 +474,13 @@ export default function CheckoutPage() {
                     key={item.id}
                     className="flex items-center space-x-3 hover:bg-gray-50 p-2 rounded transition-colors duration-200"
                   >
-                    <img
+                    {/* <img
                       src={item.imageUrl ? `https://uzjoylar-yoqj.onrender.com/${item.imageUrl}` : "/placeholder.svg"}
                       alt={item.name}
                       className="w-12 h-12 object-cover rounded-md"
-                    />
+
+                    /> */}
+
 
                     <div className="flex-1 min-w-0">
                       <h4 className="font-medium text-sm">{item.name}</h4>

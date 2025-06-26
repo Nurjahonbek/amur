@@ -9,7 +9,7 @@ type Language = "uz" | "ru" | "en"
 interface LanguageStore {
   language: Language
   setLanguage: (language: Language) => void
-  t: (key: string) => string
+  t: (key: string, replacements?: Record<string, string | number>) => string
 }
 
 const translations = {
@@ -66,7 +66,7 @@ const translations = {
     "food.lowStock": "Kam qoldi",
     "food.outOfStock": "Tugagan",
     "food.rating": "Reyting",
-    "food.viewMenu": "Menuni ko'rish", // NEW
+    "food.viewMenu": "Menuni ko'rish",
 
     // Search & Sort
     "search.placeholder": "Taom qidirish...",
@@ -89,13 +89,14 @@ const translations = {
     "cart.subtotal": "Oraliq jami",
     "cart.delivery": "Yetkazib berish",
     "cart.tax": "Soliq",
-    "cart_empty_title": "Savat bo'sh", // NEW
-    "cart_empty_description": "Buyurtma berish uchun avval taomlarni savatga qo'shing", // NEW
+    "cart_empty_title": "Savat bo'sh",
+    "cart_empty_description": "Buyurtma berish uchun avval taomlarni savatga qo'shing",
 
     // Orders
     "orders.title": "Buyurtmalar",
     "orders.status": "Holat",
     "orders.pending": "Kutilmoqda",
+    "orders.confirmed": "Tasdiqlandi",
     "orders.preparing": "Tayyorlanmoqda",
     "orders.ready": "Tayyor",
     "orders.delivered": "Yetkazildi",
@@ -104,6 +105,43 @@ const translations = {
     "orders.orderNumber": "Buyurtma raqami",
     "orders.orderDate": "Buyurtma sanasi",
     "orders.totalAmount": "Umumiy summa",
+    "orders.loading_order_data": "Buyurtma ma'lumotlari yuklanmoqda...",
+    "orders.order_not_found_title": "Buyurtma topilmadi",
+    "orders.invalid_order_id_description": "Kiritilgan buyurtma raqami noto'g'ri yoki mavjud emas",
+    "orders.search_again_button": "Qaytadan qidirish",
+    "orders.order_details_title": "Buyurtma #{{orderId}}",
+    "orders.order_composition_title": "Buyurtma tarkibi",
+    "orders.order_status_timeline_title": "Buyurtma holati",
+    "orders.delivery_info_title": "Yetkazib berish",
+    "orders.estimated_time_label": "Taxminiy vaqt: {{time}} daqiqa",
+    "orders.payment_details_title": "To'lov ma'lumotlari",
+    "orders.payment_method_label": "To'lov usuli",
+    "orders.status_label": "Holat",
+    "orders.payment_status_paid": "To'langan",
+    "orders.payment_status_pending": "Kutilmoqda",
+    "orders.amount_label": "Summa",
+    "orders.customer_details_title": "Mijoz ma'lumotlari",
+    "orders.customer_name_label": "Ism",
+    "orders.customer_phone_label": "Telefon",
+    "orders.my_orders_button": "Buyurtmalarim",
+    "orders.cancel_order_button": "Buyurtmani bekor qilish",
+    "orders.all_orders_subtitle": "Barcha buyurtmalaringiz va ularning holati",
+    "orders.status_history_note_created": "Buyurtma yaratildi",
+    "orders.status_history_note_confirmed": "Buyurtma tasdiqlandi",
+    "orders.status_history_note_preparing": "Tayyorlanmoqda",
+    // Yangi kalitlar OrdersPage uchun
+    "orders.login_to_view": "Buyurtmalaringizni ko'rish uchun tizimga kiring",
+    "orders.filter_placeholder": "Holat bo'yicha filter",
+    "orders.loading_orders": "Buyurtmalar yuklanmoqda...",
+    "orders.no_orders_found_title": "Buyurtmalar topilmadi",
+    "orders.no_orders_yet": "Siz hali hech qanday buyurtma bermagansiz",
+    "orders.no_orders_filtered": "Tanlangan holatda buyurtmalar topilmadi",
+    "orders.place_order_button": "Buyurtma berish",
+    "orders.order_content_title": "Buyurtma tarkibi",
+    "orders.other_items_count": "+{{count}} ta boshqa taom",
+    "orders.total_amount_label": "Jami summa",
+    "orders.view_details_button": "Batafsil ko'rish",
+    "orders.order_number_title": "Buyurtma #{{orderId}}",
 
     // Tables
     "tables.title": "Stollar",
@@ -112,26 +150,38 @@ const translations = {
     "tables.reserved": "Bron qilingan",
     "tables.book": "Bron qilish",
     "tables.capacity": "Sig'im",
+    "table_not_found_title": "Stol topilmadi",
+    "table_not_found_description": "Kiritilgan stol ID si mavjud emas",
+    "table_data_load_error": "Stol ma'lumotlarini yuklashda xatolik yuz berdi",
+    "loading_table_data": "Stol ma'lumotlari yuklanmoqda...",
+    "invalid_table_id_description": "Kiritilgan stol ID si noto'g'ri yoki mavjud emas",
+    "back_to_homepage_button": "Bosh sahifaga qaytish",
+    "welcome_to_amur_restaurant": "Amur Restoraniga xush kelibsiz!",
+    "your_selected_table_info": "Siz tanlagan stol ma'lumotlari",
+    "your_table_badge": "Sizning stolingiz",
+    "table_details_title": "Stol ma'lumotlari",
+    "table_name_label": "Stol nomi",
+    "table_zone_label": "Zona",
+    "table_ready_title": "Stol tayyor!",
+    "table_ready_description": "Siz bu stoldan buyurtma bera olasiz. Taomlar to'g'ridan-to'g'ri bu stolga yetkaziladi.",
+    "place_order_button_table": "Buyurtma berish",
+    "back_to_homepage_button_general": "Bosh sahifaga qaytish",
+    "additional_info_title": "Qo'shimcha ma'lumot",
+    "additional_info_description": "Buyurtma bergandan so'ng, taomlaringiz to'g'ridan-to'g'ri bu stolga yetkaziladi. Buyurtma berish uchun yuqoridagi tugmani bosing.",
 
-    // Delivery
-    "delivery.title": "Yetkazib berish",
-    "delivery.address": "Manzil",
-    "delivery.phone": "Telefon",
-    "delivery.time": "Vaqt",
-    "delivery.free": "Bepul yetkazib berish",
-    "delivery.cost": "Yetkazib berish narxi",
+    // Delivery (DastafkaPage specific)
+    "delivery.service_title": "Yetkazib berish xizmati",
+    "delivery.service_subtitle": "Tez va ishonchli yetkazib berish",
+    "delivery.delivery_service_card_title": "Yetkazib berish xizmati",
+    "delivery.delivery_service_description": "Bizning yetkazib berish xizmatimiz orqali taomlaringizni tez va xavfsiz yetkazib beramiz.",
+    "delivery.feature_fast_delivery": "30-40 daqiqa ichida yetkazib berish",
+    "delivery.feature_area_coverage": "Samarqand bo'ylab xizmat",
+    "delivery.feature_hot_delivery": "Issiq holda yetkazib berish",
+    "delivery.feature_safe_packaging": "Xavfsiz qadoqlash",
+    "delivery.contact_info_title": "Aloqa ma'lumotlari",
+    "delivery.address_location": "Samarqand shahar, Kaftarcha", // Specific address
 
-    // About
-    "about.title": "Biz haqimizda",
-    "about.description": "Biz sifatli taomlar va professional xizmat ko'rsatishga ixtisoslashganmiz",
-    "about.fastDelivery": "Tez yetkazib berish",
-    "about.fastDeliveryDesc": "30 daqiqada yetkazib beramiz",
-    "about.gpsTracking": "GPS kuzatuv",
-    "about.gpsTrackingDesc": "Buyurtmangizni real vaqtda kuzating",
-    "about.support": "24/7 qo'llab-quvvatlash",
-    "about.supportDesc": "Har doim sizning xizmatingizdamiz",
-
-    // Contact
+    // Contact (General, already existed)
     "contact.title": "Biz bilan bog'laning",
     "contact.description": "Savollaringiz bormi? Biz bilan bog'laning!",
     "contact.getInTouch": "Aloqa ma'lumotlari",
@@ -139,7 +189,7 @@ const translations = {
     "contact.address": "Manzil",
     "contact.phone": "Telefon",
     "contact.email": "Email",
-    "contact.hours": "Ish vaqti",
+    "contact.hours": "09:00 - 23:00", // Updated to reflect the working hours from the page
     "contact.name": "Ismingiz",
     "contact.subject": "Mavzu",
     "contact.message": "Xabaringiz",
@@ -167,7 +217,8 @@ const translations = {
     "common.next": "Keyingi",
     "common.previous": "Oldingi",
     "common.close": "Yopish",
-    "common.optional": "ixtiyoriy", // NEW
+    "common.optional": "ixtiyoriy",
+    "common.back_to_homepage": "Bosh sahifaga qaytish", // Added for the button link
 
     //footer
     "footer.one": "Dushanba - Yakshanba",
@@ -276,8 +327,8 @@ const translations = {
     "hero.subtitle": "Самые вкусные блюда и быстрая доставка",
     "hero.orderNow": "Заказать сейчас",
     "hero.learnMore": "Подробнее",
-    "hero.national": "Закажите самые вкусные национальные блюда Узбекистана.",
     "hero.xizmat": "с гарантией качественного обслуживания",
+    "hero.national": "Закажите самые вкусные национальные блюда Узбекистана.",
     "hero.minute": "минута",
     "hero.map": "Местоположение",
     "hero.phone": "Контакт",
@@ -310,7 +361,7 @@ const translations = {
     "food.lowStock": "Мало осталось",
     "food.outOfStock": "Нет в наличии",
     "food.rating": "Рейтинг",
-    "food.viewMenu": "Посмотреть меню", // NEW
+    "food.viewMenu": "Посмотреть меню",
 
     // Search & Sort
     "search.placeholder": "Поиск блюд...",
@@ -333,13 +384,14 @@ const translations = {
     "cart.subtotal": "Промежуточный итог",
     "cart.delivery": "Доставка",
     "cart.tax": "Налог",
-    "cart_empty_title": "Корзина пуста", // NEW
-    "cart_empty_description": "Чтобы сделать заказ, сначала добавьте блюда в корзину", // NEW
+    "cart_empty_title": "Корзина пуста",
+    "cart_empty_description": "Чтобы сделать заказ, сначала добавьте блюда в корзину",
 
     // Orders
     "orders.title": "Заказы",
     "orders.status": "Статус",
     "orders.pending": "Ожидает",
+    "orders.confirmed": "Подтверждено",
     "orders.preparing": "Готовится",
     "orders.ready": "Готов",
     "orders.delivered": "Доставлен",
@@ -348,6 +400,43 @@ const translations = {
     "orders.orderNumber": "Номер заказа",
     "orders.orderDate": "Дата заказа",
     "orders.totalAmount": "Общая сумма",
+    "orders.loading_order_data": "Загрузка данных заказа...",
+    "orders.order_not_found_title": "Заказ не найден",
+    "orders.invalid_order_id_description": "Введенный номер заказа неверен или не существует",
+    "orders.search_again_button": "Поиск снова",
+    "orders.order_details_title": "Заказ #{{orderId}}",
+    "orders.order_composition_title": "Состав заказа",
+    "orders.order_status_timeline_title": "Статус заказа",
+    "orders.delivery_info_title": "Доставка",
+    "orders.estimated_time_label": "Приблизительное время: {{time}} минут",
+    "orders.payment_details_title": "Платежные реквизиты",
+    "orders.payment_method_label": "Способ оплаты",
+    "orders.status_label": "Статус",
+    "orders.payment_status_paid": "Оплачено",
+    "orders.payment_status_pending": "Ожидание",
+    "orders.amount_label": "Сумма",
+    "orders.customer_details_title": "Информация о клиенте",
+    "orders.customer_name_label": "Имя",
+    "orders.customer_phone_label": "Телефон",
+    "orders.my_orders_button": "Мои заказы",
+    "orders.cancel_order_button": "Отменить заказ",
+    "orders.all_orders_subtitle": "Все ваши заказы и их статус",
+    "orders.status_history_note_created": "Заказ создан",
+    "orders.status_history_note_confirmed": "Заказ подтвержден",
+    "orders.status_history_note_preparing": "Готовится",
+    // Yangi kalitlar OrdersPage uchun
+    "orders.login_to_view": "Войдите, чтобы просмотреть свои заказы",
+    "orders.filter_placeholder": "Фильтр по статусу",
+    "orders.loading_orders": "Загрузка заказов...",
+    "orders.no_orders_found_title": "Заказы не найдены",
+    "orders.no_orders_yet": "Вы еще не сделали ни одного заказа",
+    "orders.no_orders_filtered": "Заказы по выбранному статусу не найдены",
+    "orders.place_order_button": "Сделать заказ",
+    "orders.order_content_title": "Состав заказа",
+    "orders.other_items_count": "+{{count}} других блюд",
+    "orders.total_amount_label": "Общая сумма",
+    "orders.view_details_button": "Посмотреть детали",
+    "orders.order_number_title": "Заказ #{{orderId}}",
 
     // Tables
     "tables.title": "Столы",
@@ -356,27 +445,38 @@ const translations = {
     "tables.reserved": "Забронирован",
     "tables.book": "Забронировать",
     "tables.capacity": "Вместимость",
+    "table_not_found_title": "Стол не найден",
+    "table_not_found_description": "Введенный ID стола не существует",
+    "table_data_load_error": "Произошла ошибка при загрузке данных стола",
+    "loading_table_data": "Загрузка данных стола...",
+    "invalid_table_id_description": "Введенный ID стола неверен или не существует",
+    "back_to_homepage_button": "Вернуться на главную страницу",
+    "welcome_to_amur_restaurant": "Добро пожаловать в ресторан Амур!",
+    "your_selected_table_info": "Информация о выбранном вами столе",
+    "your_table_badge": "Ваш стол",
+    "table_details_title": "Детали стола",
+    "table_name_label": "Название стола",
+    "table_zone_label": "Зона",
+    "table_ready_title": "Стол готов!",
+    "table_ready_description": "Вы можете сделать заказ с этого стола. Блюда будут доставлены прямо к этому столу.",
+    "place_order_button_table": "Разместить заказ",
+    "back_to_homepage_button_general": "Вернуться на главную страницу",
+    "additional_info_title": "Дополнительная информация",
+    "additional_info_description": "После оформления заказа ваши блюда будут доставлены прямо к этому столу. Нажмите кнопку выше, чтобы сделать заказ.",
 
-    // Delivery
-    "delivery.title": "Доставка",
-    "delivery.address": "Адрес",
-    "delivery.phone": "Телефон",
-    "delivery.time": "Время",
-    "delivery.free": "Бесплатная доставка",
-    "delivery.cost": "Стоимость доставки",
+    // Delivery (DastafkaPage specific)
+    "delivery.service_title": "Служба доставки",
+    "delivery.service_subtitle": "Быстрая и надежная доставка",
+    "delivery.delivery_service_card_title": "Служба доставки",
+    "delivery.delivery_service_description": "Наша служба доставки быстро и безопасно доставит ваши блюда.",
+    "delivery.feature_fast_delivery": "Доставка в течение 30-40 минут",
+    "delivery.feature_area_coverage": "Обслуживание по Самарканду",
+    "delivery.feature_hot_delivery": "Доставка горячей еды",
+    "delivery.feature_safe_packaging": "Надежная упаковка",
+    "delivery.contact_info_title": "Контактная информация",
+    "delivery.address_location": "город Самарканд, Кафтарча", // Specific address
 
-    // About
-    "about.title": "О нас",
-    "about.description": "Мы специализируемся на качественных блюдах и профессиональном обслуживании",
-    "about.fastDelivery": "Быстрая доставка",
-    "about.fastDeliveryDesc": "Доставляем за 30 минут",
-    "about.gpsTracking": "GPS отслеживание",
-    "about.gpsTrackingDesc": "Отслеживайте заказ в реальном времени",
-    "about.support": "Поддержка 24/7",
-    "about.supportDesc": "Всегда к вашим услугам",
-    "about.one": "Почему ресторан «Амур»?",
-
-    // Contact
+    // Contact (General, already existed)
     "contact.title": "Свяжитесь с нами",
     "contact.description": "Есть вопросы? Свяжитесь с нами!",
     "contact.getInTouch": "Контактная информация",
@@ -384,17 +484,11 @@ const translations = {
     "contact.address": "Адрес",
     "contact.phone": "Телефон",
     "contact.email": "Email",
-    "contact.hours": "Время работы",
+    "contact.hours": "09:00 - 23:00", // Updated to reflect the working hours from the page
     "contact.name": "Ваше имя",
     "contact.subject": "Тема",
     "contact.message": "Ваше сообщение",
     "contact.send": "Отправить",
-
-    //footer
-    "footer.one": "Понедельник - Воскресенье",
-    "footer.two": "Быстрые ссылки",
-    "footer.logo": "Ресторан Амур",
-    "footer.day": "Работайте каждый день",
 
     // Auth
     "auth.login": "Войти",
@@ -418,7 +512,14 @@ const translations = {
     "common.next": "Далее",
     "common.previous": "Предыдущий",
     "common.close": "Закрыть",
-    "common.optional": "необязательно", // NEW
+    "common.optional": "необязательно",
+    "common.back_to_homepage": "Вернуться на главную страницу",
+
+    //footer
+    "footer.one": "Понедельник - Воскресенье",
+    "footer.two": "Быстрые ссылки",
+    "footer.logo": "Ресторан Амур",
+    "footer.day": "Работайте каждый день",
 
     // Seating Areas
     "seating.title": "Места в ресторане",
@@ -498,10 +599,10 @@ const translations = {
     "location_detection_failed_title": "Не удалось определить местоположение",
     "location_detection_failed_description": "Произошла ошибка при определении местоположения. Введите вручную.",
     "order_created_title": "Заказ создан! 🎉",
-    "order_created_description": "Номер заказа: {{orderId}}. Приблизительное время: {{estimatedTime}} минут", // Supports interpolation
+    "order_created_description": "Номер заказа: {{orderId}}. Приблизительное время: {{estimatedTime}} минут",
     "error_occurred_title": "Произошла ошибка",
     "order_creation_failed_generic_description": "Произошла ошибка при создании заказа. Пожалуйста, попробуйте еще раз.",
-    "sum": "сум", // Currency key for formatPrice
+    "sum": "сум",
   },
   en: {
     // Navigation
@@ -521,8 +622,8 @@ const translations = {
     "hero.subtitle": "Delicious food and fast delivery service",
     "hero.orderNow": "Order Now",
     "hero.learnMore": "Learn More",
-    "hero.national": "Order the most delicious national dishes of Uzbekistan.",
     "hero.xizmat": "with a guarantee of quality service",
+    "hero.national": "Order the most delicious national dishes of Uzbekistan.",
     "hero.minute": "minute",
     "hero.map": "Location",
     "hero.phone": "Contact",
@@ -544,7 +645,7 @@ const translations = {
     "food.lowStock": "Low Stock",
     "food.outOfStock": "Out of Stock",
     "food.rating": "Rating",
-    "food.viewMenu": "View Menu", // NEW
+    "food.viewMenu": "View Menu",
 
     // Search & Sort
     "search.placeholder": "Search foods...",
@@ -567,13 +668,14 @@ const translations = {
     "cart.subtotal": "Subtotal",
     "cart.delivery": "Delivery",
     "cart.tax": "Tax",
-    "cart_empty_title": "Your cart is empty", // NEW
-    "cart_empty_description": "To place an order, first add dishes to your cart", // NEW
+    "cart_empty_title": "Your cart is empty",
+    "cart_empty_description": "To place an order, first add dishes to your cart",
 
     // Orders
     "orders.title": "Orders",
     "orders.status": "Status",
     "orders.pending": "Pending",
+    "orders.confirmed": "Confirmed",
     "orders.preparing": "Preparing",
     "orders.ready": "Ready",
     "orders.delivered": "Delivered",
@@ -582,6 +684,43 @@ const translations = {
     "orders.orderNumber": "Order Number",
     "orders.orderDate": "Order Date",
     "orders.totalAmount": "Total Amount",
+    "orders.loading_order_data": "Loading order data...",
+    "orders.order_not_found_title": "Order not found",
+    "orders.invalid_order_id_description": "The entered order number is incorrect or does not exist",
+    "orders.search_again_button": "Search again",
+    "orders.order_details_title": "Order #{{orderId}}",
+    "orders.order_composition_title": "Order Composition",
+    "orders.order_status_timeline_title": "Order Status",
+    "orders.delivery_info_title": "Delivery",
+    "orders.estimated_time_label": "Estimated time: {{time}} minutes",
+    "orders.payment_details_title": "Payment Details",
+    "orders.payment_method_label": "Payment Method",
+    "orders.status_label": "Status",
+    "orders.payment_status_paid": "Paid",
+    "orders.payment_status_pending": "Pending",
+    "orders.amount_label": "Amount",
+    "orders.customer_details_title": "Customer Details",
+    "orders.customer_name_label": "Name",
+    "orders.customer_phone_label": "Phone",
+    "orders.my_orders_button": "My Orders",
+    "orders.cancel_order_button": "Cancel Order",
+    "orders.all_orders_subtitle": "All your orders and their status",
+    "orders.status_history_note_created": "Order created",
+    "orders.status_history_note_confirmed": "Order confirmed",
+    "orders.status_history_note_preparing": "Preparing",
+    // Yangi kalitlar OrdersPage uchun
+    "orders.login_to_view": "Please log in to view your orders",
+    "orders.filter_placeholder": "Filter by status",
+    "orders.loading_orders": "Loading orders...",
+    "orders.no_orders_found_title": "No orders found",
+    "orders.no_orders_yet": "You haven't placed any orders yet",
+    "orders.no_orders_filtered": "No orders found for the selected status",
+    "orders.place_order_button": "Place an Order",
+    "orders.order_content_title": "Order Content",
+    "orders.other_items_count": "+{{count}} other items",
+    "orders.total_amount_label": "Total Amount",
+    "orders.view_details_button": "View Details",
+    "orders.order_number_title": "Order #{{orderId}}",
 
     // Tables
     "tables.title": "Tables",
@@ -590,55 +729,50 @@ const translations = {
     "tables.reserved": "Reserved",
     "tables.book": "Book",
     "tables.capacity": "Capacity",
+    "table_not_found_title": "Table not found",
+    "table_not_found_description": "The entered table ID does not exist",
+    "table_data_load_error": "An error occurred while loading table data",
+    "loading_table_data": "Loading table data...",
+    "invalid_table_id_description": "The entered table ID is incorrect or does not exist",
+    "back_to_homepage_button": "Back to Homepage",
+    "welcome_to_amur_restaurant": "Welcome to Amur Restaurant!",
+    "your_selected_table_info": "Information about your selected table",
+    "your_table_badge": "Your table",
+    "table_details_title": "Table Details",
+    "table_name_label": "Table Name",
+    "table_zone_label": "Zone",
+    "table_ready_title": "Table is ready!",
+    "table_ready_description": "You can order from this table. Dishes will be delivered directly to this table.",
+    "place_order_button_table": "Place Order",
+    "back_to_homepage_button_general": "Back to Homepage",
+    "additional_info_title": "Additional Information",
+    "additional_info_description": "After placing the order, your dishes will be delivered directly to this table. Click the button above to place an order.",
 
-    // Delivery
-    "delivery.title": "Delivery",
-    "delivery.address": "Address",
-    "delivery.phone": "Phone",
-    "delivery.time": "Time",
-    "delivery.free": "Free delivery",
-    "delivery.cost": "Delivery cost",
+    // Delivery (DastafkaPage specific)
+    "delivery.service_title": "Delivery Service",
+    "delivery.service_subtitle": "Fast and reliable delivery",
+    "delivery.delivery_service_card_title": "Delivery Service",
+    "delivery.delivery_service_description": "Our delivery service will deliver your dishes quickly and safely.",
+    "delivery.feature_fast_delivery": "Delivery within 30-40 minutes",
+    "delivery.feature_area_coverage": "Service throughout Samarkand",
+    "delivery.feature_hot_delivery": "Hot delivery",
+    "delivery.feature_safe_packaging": "Secure packaging",
+    "delivery.contact_info_title": "Contact Information",
+    "delivery.address_location": "Samarkand city, Kaftarcha", // Specific address
 
-    // About
-    "about.title": "About Us",
-    "about.description": "We specialize in quality food and professional service",
-    "about.fastDelivery": "Fast Delivery",
-    "about.fastDeliveryDesc": "We deliver in 30 minutes",
-    "about.gpsTracking": "GPS Tracking",
-    "about.gpsTrackingDesc": "Track your order in real-time",
-    "about.support": "24/7 Support",
-    "about.supportDesc": "Always at your service",
-    "about.one": "Why Amur Restaurant?",
-    "about.des": "We will deliver to your home within 30-40 minutes.",
-    "about.feature.fastDeliveryTitle": "Fast Delivery",
-    "about.feature.fastDeliveryDesc": "We will deliver to your home within 30-40 minutes.",
-    "about.feature.qualityGuaranteeTitle": "Quality Guarantee",
-    "about.feature.qualityGuaranteeDesc": "We use only fresh and high-quality products.",
-    "about.feature.deliveryTitle": "Delivery Service",
-    "about.feature.deliveryDesc": "Delivery service to your home.",
-    "about.feature.supportTitle": "10:00-00:00 Support",
-    "about.feature.supportDesc": "If you have any questions, we are always ready to help.",
-    // "about"
-
-    // Contact
+    // Contact (General, already existed)
     "contact.title": "Contact Us",
     "contact.description": "Have questions? Get in touch with us!",
-    "contact.getInTouch": "Get in Touch",
+    "contact.getInTouch": "Contact Information",
     "contact.sendMessage": "Send Message",
     "contact.address": "Address",
     "contact.phone": "Phone",
     "contact.email": "Email",
-    "contact.hours": "Working Hours",
+    "contact.hours": "09:00 - 23:00", // Updated to reflect the working hours from the page
     "contact.name": "Your Name",
     "contact.subject": "Subject",
     "contact.message": "Your Message",
     "contact.send": "Send",
-
-    //footer
-    "footer.one": "Monday - Sunday",
-    "footer.two": "Quick links",
-    "footer.logo": "Amur Restaurant",
-    "footer.day": "Work every day",
 
     // Auth
     "auth.login": "Login",
@@ -662,7 +796,14 @@ const translations = {
     "common.next": "Next",
     "common.previous": "Previous",
     "common.close": "Close",
-    "common.optional": "optional", // NEW
+    "common.optional": "optional",
+    "common.back_to_homepage": "Back to Homepage",
+
+    //footer
+    "footer.one": "Monday - Sunday",
+    "footer.two": "Quick links",
+    "footer.logo": "Amur Restaurant",
+    "footer.day": "Work every day",
 
     // Seating Areas
     "seating.title": "Restaurant Seating",
@@ -741,11 +882,11 @@ const translations = {
     "location_detected_description": "Your location was successfully detected",
     "location_detection_failed_title": "Failed to detect location",
     "location_detection_failed_description": "An error occurred while detecting location. Please enter manually.",
-    "order_created_title": "Order created! �",
-    "order_created_description": "Order number: {{orderId}}. Estimated time: {{estimatedTime}} minutes", // Supports interpolation
+    "order_created_title": "Order created! 🎉",
+    "order_created_description": "Order number: {{orderId}}. Estimated time: {{estimatedTime}} minutes",
     "error_occurred_title": "An error occurred",
     "order_creation_failed_generic_description": "An error occurred while creating the order. Please try again.",
-    "sum": "UZS", // Currency key for formatPrice
+    "sum": "UZS",
   },
 }
 

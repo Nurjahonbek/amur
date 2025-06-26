@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Utensils, Users, Clock, CheckCircle } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { api, type RestaurantTable } from "@/lib/api"
+import { useLanguage } from "@/hooks/use-language"
 
 export default function TablePage() {
   const params = useParams()
@@ -15,6 +16,7 @@ export default function TablePage() {
   const { toast } = useToast()
   const [table, setTable] = useState<RestaurantTable | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const {t} = useLanguage()
 
   useEffect(() => {
     const loadTable = async () => {
@@ -61,7 +63,7 @@ export default function TablePage() {
       <div className="container mx-auto px-4 py-8">
         <div className="text-center animate-pulse">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Stol ma'lumotlari yuklanmoqda...</p>
+          <p className="mt-4 text-gray-600">{t('loading_table_data')}</p>
         </div>
       </div>
     )
@@ -71,9 +73,9 @@ export default function TablePage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center animate-fade-in-up">
-          <h1 className="text-2xl font-bold mb-4">Stol topilmadi</h1>
-          <p className="text-gray-600 mb-4">Kiritilgan stol ID si noto'g'ri yoki mavjud emas</p>
-          <Button onClick={() => router.push("/")}>Bosh sahifaga qaytish</Button>
+          <h1 className="text-2xl font-bold mb-4">{t('table_not_found_title')}</h1>
+          <p className="text-gray-600 mb-4">{t('table_not_found_description')}</p>
+          <Button onClick={() => router.push("/")}>{t("back_to_homepage_button")}</Button>
         </div>
       </div>
     )
@@ -95,12 +97,12 @@ export default function TablePage() {
                 {table.is_available ? (
                   <>
                     <CheckCircle className="h-4 w-4 mr-1" />
-                    Bo'sh
+                    {t('tables.available')}
                   </>
                 ) : (
                   <>
                     <Users className="h-4 w-4 mr-1" />
-                    Band
+                    {t("tables.occupied")}
                   </>
                 )}
               </Badge>
@@ -109,14 +111,14 @@ export default function TablePage() {
 
           <CardContent className="space-y-6">
             <div className="text-center">
-              <h3 className="text-lg font-semibold mb-2">Stol ma'lumotlari</h3>
+              <h3 className="text-lg font-semibold mb-2">{t('table_details_title')}</h3>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div className="bg-gray-50 p-3 rounded-lg">
                   <p className="text-gray-600">Stol ID</p>
                   <p className="font-medium">{table.id}</p>
                 </div>
                 <div className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-gray-600">Zona</p>
+                  <p className="text-gray-600">{t('table_zone_label')}</p>
                   <p className="font-medium">{table.zone}</p>
                 </div>
               </div>
@@ -127,7 +129,7 @@ export default function TablePage() {
                 <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
                   <CheckCircle className="h-8 w-8 text-green-600 mx-auto mb-2" />
                   <h4 className="font-semibold text-green-800 mb-1">Stol bo'sh</h4>
-                  <p className="text-green-700 text-sm">Siz bu stoldan buyurtma bera olasiz</p>
+                  <p className="text-green-700 text-sm">{t('table_ready_description')}</p>
                 </div>
 
                 <div className="space-y-3">
@@ -137,7 +139,7 @@ export default function TablePage() {
                     size="lg"
                   >
                     <Utensils className="h-5 w-5 mr-2" />
-                    Bu stoldan buyurtma berish
+
                   </Button>
 
                   <Button
@@ -145,7 +147,7 @@ export default function TablePage() {
                     onClick={() => router.push("/menu")}
                     className="w-full transform hover:scale-105 transition-all duration-200"
                   >
-                    Menuni ko'rish
+                    {t('food.viewMenu')}
                   </Button>
                 </div>
               </div>
@@ -153,8 +155,8 @@ export default function TablePage() {
               <div className="space-y-4">
                 <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
                   <Users className="h-8 w-8 text-red-600 mx-auto mb-2" />
-                  <h4 className="font-semibold text-red-800 mb-1">Stol band</h4>
-                  <p className="text-red-700 text-sm">Bu stol hozirda band, boshqa stolni tanlang</p>
+                  <h4 className="font-semibold text-red-800 mb-1">{t('tables.occupied')}</h4>
+                  <p className="text-red-700 text-sm">{t('tables.reserved')}</p>
                 </div>
 
                 <Button
@@ -162,7 +164,7 @@ export default function TablePage() {
                   onClick={() => router.push("/")}
                   className="w-full transform hover:scale-105 transition-all duration-200"
                 >
-                  Bosh sahifaga qaytish
+                  {t('back_to_homepage_button_general')}
                 </Button>
               </div>
             )}
@@ -170,11 +172,10 @@ export default function TablePage() {
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Clock className="h-4 w-4 text-blue-600" />
-                <h4 className="font-semibold text-blue-800">Qo'shimcha ma'lumot</h4>
+                <h4 className="font-semibold text-blue-800">{t('additional_info_title')}</h4>
               </div>
               <p className="text-blue-700 text-sm">
-                Buyurtma bergandan so'ng, taomlaringiz to'g'ridan-to'g'ri bu stolga yetkaziladi. Buyurtma berish uchun
-                yuqoridagi tugmani bosing.
+               {t('additional_info_description')}
               </p>
             </div>
           </CardContent>

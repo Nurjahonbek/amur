@@ -82,13 +82,13 @@ export function CartSheet({ open, onOpenChange }: CartSheetProps) {
       <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent className="w-full sm:max-w-lg">
           <SheetHeader>
-            <SheetTitle>{t('sheet')}</SheetTitle>
+            <SheetTitle>{t('nav.cart')}</SheetTitle>
           </SheetHeader>
           <div className="flex flex-col items-center justify-center h-full space-y-4">
             <ShoppingBag className="h-16 w-16 text-gray-300" />
             <div className="text-center">
-              <h3 className="text-lg font-medium text-gray-900 mb-2">{t('card.sheet')}</h3>
-              <p className="text-gray-500 mb-4">{t('card.one')}</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">{t('cart.empty')}</h3>
+              <p className="text-gray-500 mb-4">{t('cart_empty_description')}</p>
               <Button asChild onClick={() => onOpenChange(false)}>
                 <Link href="/menu">{t('nav.menu')}</Link>
               </Button>
