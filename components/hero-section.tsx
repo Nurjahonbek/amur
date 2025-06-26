@@ -57,7 +57,7 @@ export function HeroSection() {
                 <span className="text-blue-400 font-semibold text-lg tracking-wide">Premium Restaurant</span>
               </div>
 
-              <h1 className="text-6xl lg:text-7xl font-bold leading-tight">
+              <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
                 <span className="text-white">
                 {t("hero.title")}
                 </span>
