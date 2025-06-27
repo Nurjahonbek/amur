@@ -180,7 +180,9 @@ const translations = {
     "delivery.feature_hot_delivery": "Issiq holda yetkazib berish",
     "delivery.feature_safe_packaging": "Xavfsiz qadoqlash",
     "delivery.contact_info_title": "Aloqa ma'lumotlari",
-    "delivery.address_location": "Samarqand shahar, Kaftarcha", // Specific address
+    "delivery.address_location": "Samarqand shahar, Kaftarcha", // Specific
+    // address
+    "2025" : " 2025 Amur Restorani. Barcha huquqlar himoyalangan",
 
     // Contact (General, already existed)
     "contact.title": "Biz bilan bog'laning",
@@ -351,6 +353,8 @@ const translations = {
     "about.feature.supportDesc": "Если у вас есть вопросы, мы всегда готовы помочь",
     "about.description" : "Мы стремимся предоставить нашим клиентам лучший сервис и качественную еду.",
     "about.one": "Почему ресторан «Амур»?",
+
+    "2025" : "2025 Ресторан Амур. Все права защищены.",
 
     // Featured
     "featured.title": "Популярные блюда",
@@ -751,6 +755,8 @@ const translations = {
     "back_to_homepage_button_general": "Back to Homepage",
     "additional_info_title": "Additional Information",
     "additional_info_description": "After placing the order, your dishes will be delivered directly to this table. Click the button above to place an order.",
+
+    "2025" : "2025 Amur Restaurant. All rights reserved",
 
     // Delivery (DastafkaPage specific)
     "delivery.service_title": "Delivery Service",

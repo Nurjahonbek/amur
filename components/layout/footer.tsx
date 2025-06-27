@@ -71,7 +71,7 @@ export function Footer() {
               </li>
               <li className="flex items-start space-x-2">
                 <MapPin className="h-4 w-4 text-orange-400 mt-1" />
-                <span className="text-gray-400">Samarqand shahar, Kaftarcha</span>
+                <span className="text-gray-400">{t('delivery.address_location')}</span>
               </li>
             </ul>
           </div>
@@ -91,7 +91,7 @@ export function Footer() {
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
-          <p className="text-gray-400">© 2025 Amur Restorani. Barcha huquqlar himoyalangan.</p>
+          <p className="text-gray-400">©{t('2025')}</p>
         </div>
       </div>
     </footer>
